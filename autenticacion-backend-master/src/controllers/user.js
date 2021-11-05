@@ -36,7 +36,7 @@ controllers.loginUser = async (req, res, next)=> {
     passport.authenticate('login', (err, usuario)=>{
         // JWT sing token here
         const {_id} = usuario;
-        const token = jwt.sign({id: _id}, 'top_secret')
+        const token = jwt.sign({id: _id}, process.env.JWT_SECRET)
         if(err){ next(err); }
         if(!usuario){ res.status(404).json({message: 'Email o contraseña incorrecta'}) }
         req.logIn(usuario, {session: false}, (err)=>{
@@ -63,7 +63,6 @@ controllers.deleteUser = async (req, res)=>{
 
 controllers.updateUserNoteList = async (req, res)=>{
     await User.findOneAndUpdate({_id: req.query.idUser}, {$pull : {notes: req.query.idNote}})
-    const user = await User.findOne({_id: req.query.idUser})
     res.json({
         message: 'Updated note list...'
     })
@@ -71,7 +70,7 @@ controllers.updateUserNoteList = async (req, res)=>{
 
 controllers.authUser = async (req, res, next)=> {
     res.json({
-        message: 'hola',
+        message: 'This user is authenticated',
         user: req.user,
         loggedIn: req.isAuthenticated()
     })

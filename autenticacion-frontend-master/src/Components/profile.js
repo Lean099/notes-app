@@ -19,7 +19,7 @@ const Profile = (props)=>{
             }
 
             async function fetchData(){
-                await axios.get('http://localhost:4000/api/user/profile/', config)
+                await axios.get(`${process.env.REACT_APP_API_URL}/api/user/profile/`, config)
                     .then(res=>{
                         const data = res.data
                         setUser(data.user)

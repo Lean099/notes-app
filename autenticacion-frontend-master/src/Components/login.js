@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { Redirect } from 'react-router-dom';
 import axios from 'axios'
 
 export const Login = ()=>{
@@ -18,7 +17,7 @@ export const Login = ()=>{
     })
 
     const getUsers = async ()=>{
-        await axios.get('http://localhost:4000/api/user/')
+        await axios.get(`${process.env.REACT_APP_API_URL}/api/user/`)
             .then(res=>{
                 const users = res.data;
                 setUsers(users);
@@ -39,7 +38,7 @@ export const Login = ()=>{
     const onEnviarDatos = async (e)=>{
         e.preventDefault()
         try {
-            await axios.post('http://localhost:4000/api/user/', {
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/user/`, {
             username: datos.user,
             email: datos.emailSign,
             password: datos.passSign
@@ -57,7 +56,7 @@ export const Login = ()=>{
 
     const enviarLogin = async (e)=>{
         e.preventDefault()
-            await axios.post('http://localhost:4000/api/user/login/', {
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/user/login/`, {
                 email: datos.emailLogin,
                 password: datos.passLogin
             })

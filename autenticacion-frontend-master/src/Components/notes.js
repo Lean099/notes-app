@@ -14,7 +14,7 @@ const Notes = (props)=>{
             headers: { Authorization: `Bearer ${token}` }
         }
 
-        await axios.get('http://localhost:4000/api/user/profile/', config)
+        await axios.get(`${process.env.REACT_APP_API_URL}/api/user/profile/`, config)
             .then(res=>{
                 const data = res.data
                 setUser(data.user)
@@ -25,7 +25,7 @@ const Notes = (props)=>{
     }
 
     const fetchDataNote = async ()=>{
-        await axios.get('http://localhost:4000/api/note/' + user._id)
+        await axios.get(`${process.env.REACT_APP_API_URL}/api/note/` + user._id)
             .then(res=>{
                 const data = res.data
                 setNotes(data)
@@ -61,14 +61,11 @@ const Notes = (props)=>{
     }, [token, user])
 
     const deleteNote = async (noteID, authorID)=>{
-        await axios.delete('http://localhost:4000/api/note/' + noteID)
-        await axios.post('http://localhost:4000/api/user/update/?idUser='+authorID+'&idNote='+noteID)
-        fetchDataNote()  
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/note/${noteID}`)
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/user/update/?idUser=${authorID}&idNote=${noteID}`)
+        fetchDataNote()
     }
     
-    console.log(token)
-    console.log(user)
-    console.log(notes)
     if(window.localStorage.getItem('loggedNoteAppUser') == null){
         return(
             <Redirect to='/login'/>
@@ -138,7 +135,7 @@ const FormNotes = ({id})=>{
 
     const enviarNota = async (e)=>{
         e.preventDefault()
-        await axios.post('http://localhost:4000/api/note/' + id,{
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/note/${id}`,{
             title: datos.title,
             content: datos.content
         })

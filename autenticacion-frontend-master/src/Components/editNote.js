@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Redirect, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios'
 
 export const EditNote = ()=>{
@@ -13,9 +13,8 @@ export const EditNote = ()=>{
 
     useEffect(()=>{
         async function getDataNote(){
-            await axios.get('http://localhost:4000/api/note/single/' + id)
+            await axios.get(`${process.env.REACT_APP_API_URL}/api/note/single/${id}`)
                 .then(res=>{
-                    console.log(res.data)
                     setDatos({
                         title: res.data.title,
                         content: res.data.content
@@ -39,7 +38,7 @@ export const EditNote = ()=>{
 
     const enviarNota = async (e)=>{
         e.preventDefault()
-        await axios.put('http://localhost:4000/api/note/' + id,{
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/note/${id}`,{
             title: datos.title,
             content: datos.content
         })

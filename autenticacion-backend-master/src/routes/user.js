@@ -25,7 +25,7 @@ router.route('/logout')
     .get(logoutUser)
 
 router.route('/profile')
-    .get(passport.authenticate('jwt', {session: false}), authUser)      // Esto es como poner app.get('/profile', ()=>{...}, ()=>{...}, ()=>{...} )
-                                                                                            // se va a ir ejecutanto un middleware despues del otro
+    .get(passport.authenticate('jwt', {session: false}), authUser)
+                                                                                            
 
 module.exports = router;

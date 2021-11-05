@@ -26,19 +26,15 @@ module.export = passport.use('login', new LocalStrategy({
 }))
 
 module.export = passport.use('jwt', new JwtStrategy({
-    secretOrKey: 'top_secret',
+    secretOrKey: process.env.JWT_SECRET,
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken('secret_token'),
-    //jwtFromRequest: ExtractJwt.fromUrlQueryParameter('secret_token')
 }, async (token, done)=>{
-    console.log('holeeeee')
-    console.log(JSON.stringify(token));
         await User.findOne({_id: token.id}, (err, user)=>{
-            console.log(JSON.stringify(user))
             if(err){
                 return done(null, err)
             }
             if(user){
-                return done(null, user) // iba user._id, este user se guarda en el req (request)
+                return done(null, user)
             }else{
                 return done(null, false, {message: "You don't have access"})
             }
