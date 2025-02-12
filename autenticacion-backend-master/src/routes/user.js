@@ -5,27 +5,22 @@ const router = Router();
 
 const {getUsers, createUser, deleteUser, loginUser, logoutUser, authUser, getUser, updateUserNoteList} = require("../controllers/user")
 
+// Poner esto en las rutas privadas passport.authenticate('jwt', {session: false}) antes de que ejecute el controlador
+
 router.route('/')
-    .get(getUsers)
+    .get(passport.authenticate('jwt', {session: false}), getUsers)
     .post(createUser)
 
 router.route('/single/:id')
-    .get(getUser)
+    .get(passport.authenticate('jwt', {session: false}), getUser)
 
 router.route('/update/')
-    .post(updateUserNoteList)
+    .post(passport.authenticate('jwt', {session: false}), updateUserNoteList)
 
 router.route('/:id')
-    .delete(deleteUser)
+    .delete(passport.authenticate('jwt', {session: false}), deleteUser)
 
 router.route('/login')
     .post(loginUser)
-
-router.route('/logout')
-    .get(logoutUser)
-
-router.route('/profile')
-    .get(passport.authenticate('jwt', {session: false}), authUser)
-                                                                                            
 
 module.exports = router;

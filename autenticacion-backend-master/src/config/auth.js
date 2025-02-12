@@ -7,6 +7,8 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 
+/* Esta se usa para la ruta /login, el token se genera en el controlador user en loginUser,
+luego ese token lo guardamos en el frontend y lo usamos luego para acceder a otras rutas */
 module.export = passport.use('login', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password'
@@ -25,24 +27,26 @@ module.export = passport.use('login', new LocalStrategy({
     }
 }))
 
+
+// Este es para proteger las rutas privadas se coloca antes de ejecutar el controlador
 module.export = passport.use('jwt', new JwtStrategy({
     secretOrKey: process.env.JWT_SECRET,
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken('secret_token'),
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 }, async (token, done)=>{
-        await User.findOne({_id: token.id}, (err, user)=>{
-            if(err){
-                return done(null, err)
-            }
+        try {
+            const user = await User.findOne({_id: token.id})
             if(user){
                 return done(null, user)
             }else{
-                return done(null, false, {message: "You don't have access"})
+                return done(null, false, { message: "You don't have access" });
             }
-        })
-        
+        } catch (error) {
+            return done(err, false);
+        }
 }))
 
-passport.serializeUser((user, done)=>{
+// Esto creo que ni se usa probar luego
+/*passport.serializeUser((user, done)=>{
     done(null, user._id)
 })
 
@@ -50,6 +54,6 @@ passport.deserializeUser((id, done)=>{
     User.findById(id, (err, user)=>{
         done(null, user)
     })
-})
+})*/
 
 

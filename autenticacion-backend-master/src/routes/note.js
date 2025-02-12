@@ -8,12 +8,12 @@ router.route('/')
     .get(getNotes)
 
 router.route('/single/:id')
-    .get(getNote)
+    .get(passport.authenticate('jwt', {session: false}), getNote)
     
 router.route('/:id')
-    .post(createNote)
-    .get(getUserNotes)
-    .put(updateNote)
-    .delete(deleteNote)
+    .post(passport.authenticate('jwt', {session: false}), createNote)
+    .get(passport.authenticate('jwt', {session: false}), getUserNotes)
+    .put(passport.authenticate('jwt', {session: false}), updateNote)
+    .delete(passport.authenticate('jwt', {session: false}), deleteNote)
 
 module.exports = router;

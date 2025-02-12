@@ -4,6 +4,7 @@ const controllers = {};
 
 
 const User = require('../models/User');
+const Note = require('../models/Note')
 require('../config/auth')
 
 controllers.getUsers = async (req, res)=>{
@@ -22,13 +23,7 @@ controllers.getUser = async (req, res)=>{
 controllers.createUser = async (req, res, next)=>{
     const {username, email, password} = req.body;
     const user = await User.create({username: username, email: email, password: password});
-    user.save((err)=>{
-        if (err) next(err);
-        req.logIn(user, {session: false}, (err)=>{
-            next(err);
-        })
-    });
-    
+    user.save();
     res.json('user created');
 }
 
@@ -38,41 +33,31 @@ controllers.loginUser = async (req, res, next)=> {
         const {_id} = usuario;
         const token = jwt.sign({id: _id}, process.env.JWT_SECRET)
         if(err){ next(err); }
-        if(!usuario){ res.status(404).json({message: 'Email o contraseña incorrecta'}) }
-        req.logIn(usuario, {session: false}, (err)=>{
-            if(err) {next(err)}
-            res.json({
-                message: 'Session Started',
-                token,
-                loggedIn: req.isAuthenticated()
+        if(!usuario){ 
+            res.status(404).json({
+                message: 'Incorrect email or password',
+                loggedIn: false
             })
+         }
+        res.json({
+            message: 'User successfully logged in',
+            token,
+            loggedIn: true
         })
-        
     })(req, res, next)
 }
 
-controllers.logoutUser = (req, res)=>{
-    req.logout()
-    res.json('The session has ended')
-}
-
 controllers.deleteUser = async (req, res)=>{
-    await User.findByIdAndRemove(req.params.id);
+    await Note.deleteMany({idAuthor: req.params.id})
+    await User.deleteOne({_id: req.params.id});
     res.json('User removed');
 }
 
+// Borra simplemente una nota de la lista o su referencia dentro del array notes, pero no elimina la nota, es solo para actualizar
 controllers.updateUserNoteList = async (req, res)=>{
-    await User.findOneAndUpdate({_id: req.query.idUser}, {$pull : {notes: req.query.idNote}})
+    await User.findOneAndUpdate({_id: req.body.idUser}, {$pull : {notes: req.body.idNote}})
     res.json({
         message: 'Updated note list...'
-    })
-}
-
-controllers.authUser = async (req, res, next)=> {
-    res.json({
-        message: 'This user is authenticated',
-        user: req.user,
-        loggedIn: req.isAuthenticated()
     })
 }
 

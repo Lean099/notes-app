@@ -14,8 +14,8 @@ notesControllers.getNote = async (req, res)=>{
 }
 
 notesControllers.createNote = async (req, res)=>{
-    const user = await User.findById(req.params.id)
-    const {title, content} = req.body;
+    const {title, content, idUser} = req.body;
+    const user = await User.findById(idUser)
     const newNote = new Note({title: title, content: content, author: user.username, idAuthor: user._id});
     await newNote.save()
     user.notes = user.notes.concat(newNote._id)
@@ -23,7 +23,7 @@ notesControllers.createNote = async (req, res)=>{
     res.json({
         message: "Note Created",
         note: newNote
-    }) 
+    })
 }
 
 notesControllers.getUserNotes = async (req, res)=>{
@@ -31,6 +31,8 @@ notesControllers.getUserNotes = async (req, res)=>{
     res.json(notes)
 }
 
+/* No hace falta pasar title y content los dos a la vez podria ser { "content": "asd..." } y solo actualizaria
+el contenido de la nota */
 notesControllers.updateNote = async (req, res)=>{
     const {title, content} = req.body;
     await Note.findByIdAndUpdate(req.params.id, {
@@ -48,7 +50,7 @@ notesControllers.deleteNote = async (req, res)=>{
         _id: 1,
     })
     await Note.findOneAndDelete({_id: req.params.id})
-    await User.findOneAndUpdate({_id: noteAndUser.idAuthor._id}, {$pull: {notes: req.params.id}}) 
+    await User.findOneAndUpdate({_id: noteAndUser.idAuthor._id}, {$pull: {notes: req.params.id}})
     res.json({
         message: "Note delete successfully",
     })
