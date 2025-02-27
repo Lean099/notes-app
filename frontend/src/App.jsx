@@ -28,14 +28,5 @@ function App() {
     </div>
   )
 }
-/* 
-        <Nav />
-        <Route path="/" exact component={Page}/>
-        <Route path="/login" component={Login}/>
-        <Route path="/logout" component={Logout}/>
-        <Route path="/profile" component={Profile}/>
-        <Route path="/notes" component={Notes}/>
-        <Route path="/edit/:id" component={EditNote}/>
-*/
 
 export default App

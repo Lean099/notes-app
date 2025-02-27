@@ -9,7 +9,6 @@ export const EditNote = ()=>{
         content: ""
     })
     const [token, setToken] = useState('')
-    const [loggedIn, setLoggedIn] = useState(null)
     const {id} = useParams()
     const config = {
         headers: { Authorization: `Bearer ${token}` }

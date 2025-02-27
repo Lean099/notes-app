@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 
 export const Login = ()=>{
@@ -9,24 +9,11 @@ export const Login = ()=>{
         user:'',
         passSign:''
     })
-    const [users, setUsers] = useState([])
     const [response, setResponse] = useState({
         message: '',
         token: '',
         loggedIn: null
     })
-
-    const getUsers = async ()=>{
-        await axios.get(`${import.meta.env.VITE_API_URL}/api/user/`)
-            .then(res=>{
-                const users = res.data;
-                setUsers(users);
-            })
-    }
-
-    useEffect(()=>{
-        getUsers()
-    }, [])
 
     const handleInputChange = (event) => {
         setDatos({
@@ -119,12 +106,6 @@ export const Login = ()=>{
                     </form>
                 </div>
             </div>
-            {/*<div className="row">
-                <div className="col">
-                    <p className="fs-3 mx-3 mb-3">Usuarios registrados recientemente:</p>
-                    { users.map(user => <span class="badge bg-success mx-2 p-2">Username: {user.username} - Email: {user.email}</span>) }
-                </div>
-            </div>*/}
         </div>
     )
 }

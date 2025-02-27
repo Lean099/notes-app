@@ -4,17 +4,13 @@ import axios from 'axios'
 
 const Notes = (props)=>{
     
-    /* Para con el token hacer lo mismo que el componente profile */
     const [token, setToken] = useState('')
-    const [loggedIn, setLoggedIn] = useState(null)
     const [user, setUser] = useState({})
     const [notes, setNotes] = useState([])
     const config = {
         headers: { Authorization: `Bearer ${token}` }
     }
 
-    /* Este metodo puede que no sea necesario porque en el useEffect ya estoy obteniendo el usuario y las notas a la vez,
-    puede que me sirva para actualizar en caso que de necesite refrescar alguna nota que se actualizo y necesito ver los cambios */
      const fetchDataNote = async ()=>{
         await axios.get(`${import.meta.env.VITE_API_URL}/api/note/${user._id}`, config)
             .then(res=>{
@@ -49,12 +45,8 @@ const Notes = (props)=>{
 
     }, [])
 
-    const deleteNote = async (noteID, authorID)=>{
+    const deleteNote = async (noteID)=>{
         await axios.delete(`${import.meta.env.VITE_API_URL}/api/note/${noteID}`, config)
-        /*await axios.post(`${import.meta.env.VITE_API_URL}/api/user/updateUserNoteList`, {
-            idUser: authorID,
-            idNote: noteID
-        })*/
         fetchDataNote()
     }
     
@@ -137,6 +129,7 @@ const FormNotes = ({id, config, actualizarCambios})=>{
         }, config)
             .then(res=>{
                 //window.location.href = '/notes';
+                setDatos({ title: "", content: "" });
                 actualizarCambios()
             })
             .catch(error=>{
@@ -152,11 +145,11 @@ const FormNotes = ({id, config, actualizarCambios})=>{
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Title</label>
-                    <input type="text" className="form-control" onChange={handleInputChange} name="title" placeholder="My first note..."/>
+                    <input type="text" className="form-control" onChange={handleInputChange} name="title" value={datos.title} placeholder="My first note..."/>
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Content</label>
-                    <textarea className="form-control" rows="3" onChange={handleInputChange} name="content" placeholder="Some text..."></textarea>
+                    <textarea className="form-control" rows="3" onChange={handleInputChange} name="content" value={datos.content} placeholder="Some text..."></textarea>
                 </div>
                 <div className="mb-3">
                     <button type="submit" className="btn btn-primary">Submit</button>

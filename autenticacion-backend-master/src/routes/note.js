@@ -6,7 +6,7 @@ const router = Router();
 const {getNotes, createNote, getUserNotes, updateNote, deleteNote, getNote} = require('../controllers/note');
 
 router.route('/')
-    .get(getNotes)
+    //.get(passport.authenticate('jwt', {session: false}), getNotes)
     .post(passport.authenticate('jwt', {session: false}), createNote)
 
 router.route('/single/:id')

@@ -24,7 +24,6 @@ const Profile = (props)=>{
                         setUser(res.data.data)
                     })
             }
-
             fetchData()
         }
     }, [])
