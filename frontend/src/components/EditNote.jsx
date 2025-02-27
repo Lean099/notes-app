@@ -20,7 +20,6 @@ export const EditNote = ()=>{
         if(userLogged){
             const userData = JSON.parse(userLogged)
             setToken(userData.token)
-            setLoggedIn(userData.loggedIn)
             const config = {
                 headers: { Authorization: `Bearer ${userData.token}` }
             }
