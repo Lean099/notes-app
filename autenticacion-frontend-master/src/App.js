@@ -10,6 +10,7 @@ import Notes from './Components/notes'
 import Nav from './Components/navigation'
 import {EditNote} from './Components/editNote'
 
+// Usar esto para probar antes del npm start export NODE_OPTIONS=--openssl-legacy-provider
 
 function App() {
   return (

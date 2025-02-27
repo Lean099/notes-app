@@ -12,8 +12,12 @@ controllers.getUsers = async (req, res)=>{
     res.json(users);
 }
 
+// El id del usuario lo obtengo gracias a passport que me lo guarda en el req luego de hacer la autorizacion
 controllers.getUser = async (req, res)=>{
-    const userOne = await User.findOne({_id: req.params.id}).populate('notes')
+    const userOne = await User.findOne({_id: req.user.id}).populate('notes')
+    if (!userOne) {
+        return res.status(404).json({ message: "User not found" });
+    }
     res.json({
         message: "Success!!",
         data: userOne
